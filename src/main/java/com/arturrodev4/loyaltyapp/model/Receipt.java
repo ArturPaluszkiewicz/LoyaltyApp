@@ -1,6 +1,10 @@
 package com.arturrodev4.loyaltyapp.model;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "receipt")
 public class Receipt {
@@ -10,6 +14,8 @@ public class Receipt {
     private String billNumber;
     private int amount;
     private boolean bindToClient;
+    private LocalDateTime lastUpdateDate;
+    private LocalDateTime createdDate;
 
     public String getBillNumber() {
         return billNumber;
@@ -35,4 +41,20 @@ public class Receipt {
     public void setBindToClient(boolean bindToClient) {
         this.bindToClient = bindToClient;
     }
+
+    public void updateFrom(Receipt receiptToSave){
+        billNumber = receiptToSave.getBillNumber();
+        amount = receiptToSave.getAmount();
+        bindToClient = receiptToSave.isBindToClient();
+    }
+
+    @PrePersist
+    void prePersist(){
+        createdDate = LocalDateTime.now();
+    }
+    @PreUpdate
+    void PreUpdate(){
+        lastUpdateDate = LocalDateTime.now();
+    }
+
 }

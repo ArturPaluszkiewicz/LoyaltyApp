@@ -42,8 +42,10 @@ public class ReceiptController {
         if(!receiptRepository.existsById(id)){
          return ResponseEntity.notFound().build();
         }
-        receiptToUpdate.setId(id);
-        receiptRepository.save(receiptToUpdate);
+        receiptRepository.findById(id).ifPresent(receipt -> {
+            receipt.updateFrom(receiptToUpdate);
+            receiptRepository.save(receipt);
+        });
         return ResponseEntity.noContent().build();
     }
 
